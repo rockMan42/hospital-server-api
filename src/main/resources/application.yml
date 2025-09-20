@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: SheQuServe
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/shequdb?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: root
+server:
+  port: 8081
+
+mybatis:
+  # 指定 Mapper XML 檔案位置
+  mapper-locations: classpath*:mappers/*.xml
+  # 設定實體類別名，XML 中可用簡寫（如 User 而非全路徑）
+  type-aliases-package: com.shequ.shequserve.entity
+  # 核心配置
+  configuration:
+    # 啟用下劃線轉駝峰（強烈建議開啟）
+    map-underscore-to-camel-case: true
+    # 打印 MyBatis 執行的 SQL（方便除錯）
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 可選：開啟自動映射（預設 PARTIAL，通常不用改）
+    auto-mapping-behavior: FULL
+    # 可選：開啟快取（預設 true）
+    cache-enabled: true
+    # 可選：設定 JDBC 類型的處理方式
+    jdbc-type-for-null: NULL
