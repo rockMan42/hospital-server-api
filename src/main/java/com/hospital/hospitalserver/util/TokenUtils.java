@@ -6,7 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.hospital.hospitalserver.entity.UserInfo;
+import com.hospital.hospitalserver.domain.entity.HospitalUser;
 
 import java.util.Date;
 
@@ -24,7 +24,7 @@ public class TokenUtils {
      * @param user
      * @return token
      */
-    public static String sign(UserInfo user){
+    public static String sign(HospitalUser user){
 
         String token=null;
         try {
@@ -73,7 +73,7 @@ public class TokenUtils {
      * @param user
      * @return refreshToken
      */
-    public static String refreshToken(UserInfo user){
+    public static String refreshToken(HospitalUser user){
 
         String refreshToken="";
         try {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.hospitalserver.mapper.HospitalPatientMapper">
+
+    <insert id="createPatient" parameterType="com.hospital.hospitalserver.domain.entity.HospitalPatient">
+        insert into hospital.h_patient_tb(name,gender,id_card,birth_date,phone,address,remark)
+        values(#{name},#{gender},#{idCard},#{birthDate},#{phone},#{address},#{remark})
+    </insert>
+
+    <select id="getPatientPage" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetPatientReqDto" resultType="com.hospital.hospitalserver.domain.entity.HospitalPatient">
+        select
+            id,
+            name,
+            gender,
+            id_card AS idCard,
+            birth_date AS birthDate,
+            phone,
+            address,
+            remark
+        from hospital.h_patient_tb
+            <where>
+                <if test="name != null">
+                    and name like concat('%',#{name},'%')
+                </if>
+                <if test="idCard != null">
+                    and id_card = #{idCard}
+                </if>
+                <if test="phone != null">
+                    and phone = #{phone}
+                </if>
+            </where>
+        limit #{start},#{size}
+    </select>
+
+    <select id="getPatientCount" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetPatientReqDto" resultType="java.lang.Integer">
+        select count(1) from hospital.h_patient_tb
+            <where>
+                <if test="name != null">
+                    and name like concat('%',#{name},'%')
+                </if>
+                <if test="idCard != null">
+                    and id_card = #{idCard}
+                </if>
+                <if test="phone != null">
+                    and phone = #{phone}
+                </if>
+            </where>
+    </select>
+</mapper>

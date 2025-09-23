@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.hospitalserver.mapper.HospitalDoctorMapper">
+
+    <!--查询医生列表-->
+    <select id="getDoctorPageList" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetDoctorPageReqDto"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorPageRespDto">
+        SELECT DISTINCT
+            hd.id AS doctorId,
+            hd.name AS name
+<!--            hd.job_title AS jobTitle,-->
+<!--            hd.phone AS phone,-->
+<!--            hd.status AS status,-->
+<!--            hc.room_number AS roomNumber,-->
+<!--            hc.location AS roomLocation-->
+        FROM hospital.h_doctor_tb hd
+                 LEFT JOIN hospital.h_clinic_room_doctor_tb hcd ON hd.id = hcd.doctor_id
+                 LEFT JOIN hospital.h_clinic_room_tb hc ON hcd.clinic_room_id = hc.id
+                 LEFT JOIN hospital.h_department_tb hdpt ON hc.department_id = hdpt.id
+        <where>
+            <if test="departmentId != null">
+                AND hdpt.id = #{departmentId}
+            </if>
+            <if test="clinicRoomId != null">
+                AND hc.id = #{clinicRoomId}
+            </if>
+            AND hd.status = 0  -- 只查询在职医生
+            AND hc.status = 1  -- 只查询正常使用的诊室
+        </where>
+        ORDER BY hd.name
+    </select>
+
+</mapper>

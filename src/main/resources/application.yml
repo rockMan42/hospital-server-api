@@ -3,7 +3,7 @@ spring:
     name: SheQuServe
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/shequdb?useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://localhost:3306/hospital?useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: root
 server:
@@ -12,7 +12,7 @@ server:
 mybatis:
   # 指定 Mapper XML 檔案位置
   mapper-locations: classpath*:mappers/*.xml
-  # 設定實體類別名，XML 中可用簡寫（如 User 而非全路徑）
+  # 設定實體類別名，XML 中可用簡寫（如 HospitalUser 而非全路徑）
   type-aliases-package: com.shequ.shequserve.entity
   # 核心配置
   configuration:

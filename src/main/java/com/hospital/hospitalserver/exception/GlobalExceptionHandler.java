@@ -1,6 +1,9 @@
 package com.hospital.hospitalserver.exception;
 
 import com.hospital.hospitalserver.util.Response;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

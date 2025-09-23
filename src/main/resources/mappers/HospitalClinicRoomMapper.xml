@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.hospitalserver.mapper.HospitalClinicRoomMapper">
+
+    <select id="getClinicRoomSlimNameList"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetClinicRoomPageReqDto"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomPageRespDto">
+        SELECT
+            cc.id AS clinicRoomId,
+            cc.name AS name
+        FROM hospital.h_clinic_room_tb cc
+        WHERE cc.department_id = #{departmentId}
+    </select>
+</mapper>
