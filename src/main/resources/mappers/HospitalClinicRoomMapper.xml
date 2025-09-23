@@ -13,4 +13,30 @@
         FROM hospital.h_clinic_room_tb cc
         WHERE cc.department_id = #{departmentId}
     </select>
+
+    <insert id="bindDoctorAndClinicRoom"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalCreateDoctorReqDto">
+        INSERT INTO hospital.h_clinic_room_doctor_tb (clinic_room_id, doctor_id)
+        VALUES (#{clinicRoomId}, #{id})
+    </insert>
+
+    <!--更新医生的诊室绑定关系-->
+    <update id="updateDoctorClinicRoomBinding">
+        UPDATE hospital.h_clinic_room_doctor_tb 
+        SET clinic_room_id = #{clinicRoomId}
+        WHERE doctor_id = #{doctorId}
+    </update>
+
+    <!--解绑医生与诊所-->
+    <delete id="unBindDoctorAndClinicRoom">
+        DELETE FROM hospital.h_clinic_room_doctor_tb
+        <where>
+            <if test="ids != null">
+                doctor_id IN
+                <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </delete>
 </mapper>

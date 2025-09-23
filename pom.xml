@@ -11,8 +11,8 @@
     <groupId>com.shequ</groupId>
     <artifactId>HospitalServer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>SheQuServe</name>
-    <description>SheQuServe</description>
+    <name>HospitalServer</name>
+    <description>HospitalServer</description>
     <url/>
     <licenses>
         <license/>
