@@ -7,19 +7,18 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
- * 医生
+ * 护士
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HospitalDoctor extends BaseDomain implements Serializable {
+public class HospitalNurse extends BaseDomain implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 医生姓名
+     * 医护士姓名
      */
     private String name;
 
@@ -39,12 +38,12 @@ public class HospitalDoctor extends BaseDomain implements Serializable {
     private Integer age;
 
     /**
-     * 医生职称ID
+     * 护士职称ID
      */
-    private Integer ptId;
+    private Integer nptId;
 
     /**
-     * 诊室id
+     * 科室ID
      */
     private Integer clinicRoomId;
 

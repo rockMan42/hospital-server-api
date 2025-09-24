@@ -54,7 +54,7 @@ public class WebConfiguration implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         List<String> excludePath = new ArrayList<>();
         //排除拦截，除了注册登录(此时还没token)，其他都拦截
-        excludePath.add("/user/validateUser");  //登录
+        excludePath.add("/user/login");  //登录
         excludePath.add("/regUser");  //注册
         excludePath.add("/activeUser/*");  //激活
         excludePath.add("/home/getTest");  //排除特定路径

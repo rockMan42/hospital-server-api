@@ -1,4 +1,4 @@
-package com.hospital.hospitalserver.controller;
+package com.hospital.hospitalserver.controller.user;
 
 import com.hospital.hospitalserver.domain.entity.HospitalUser;
 import com.hospital.hospitalserver.service.HospitalUserService;
@@ -20,8 +20,8 @@ public class UserController {
      * 验证用户登录
      * 验证登录的地址： 服务器地址:端口号/user/validateUser
      * */
-        @PostMapping("/validateUser")
-    public Response vaidateUser(@RequestBody HospitalUser user){
-        return userService.validateUser(user);
+    @PostMapping("/login")
+    public Response login(@RequestBody HospitalUser user){
+        return userService.login(user);
     }
 }

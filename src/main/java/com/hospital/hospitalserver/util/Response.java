@@ -1,6 +1,6 @@
 package com.hospital.hospitalserver.util;
 
-import com.hospital.hospitalserver.enums.ResultCodeEnum;
+import com.hospital.hospitalserver.domain.enums.ResultCodeEnum;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;

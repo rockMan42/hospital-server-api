@@ -1,22 +1,22 @@
-package com.hospital.hospitalserver.domain.entity;
+package com.hospital.hospitalserver.domain.dto.response;
 
-import com.hospital.hospitalserver.domain.BaseDomain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
- * 医生
+ * 根据用户名查询护士信息
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HospitalDoctor extends BaseDomain implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class GetNurseDetailByUsername {
+    /**
+     * 医生id
+     */
+    private Integer id;
 
     /**
      * 医生姓名
@@ -39,14 +39,14 @@ public class HospitalDoctor extends BaseDomain implements Serializable {
     private Integer age;
 
     /**
-     * 医生职称ID
+     * 医生职称
      */
-    private Integer ptId;
+    private String profashionTitle;
 
     /**
-     * 诊室id
+     * 科室名称
      */
-    private Integer clinicRoomId;
+    private String departmentName;
 
     /**
      * 专业方向

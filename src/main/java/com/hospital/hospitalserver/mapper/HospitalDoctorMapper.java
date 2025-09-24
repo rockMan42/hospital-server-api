@@ -5,9 +5,11 @@ import com.hospital.hospitalserver.domain.dto.request.HospitalGetDoctorPageReqDt
 import com.hospital.hospitalserver.domain.dto.request.HospitalGetDoctorFullPageReqDto;
 import com.hospital.hospitalserver.domain.dto.request.HospitalGetDoctorDetailReqDto;
 import com.hospital.hospitalserver.domain.dto.request.HospitalUpdateDoctorReqDto;
+import com.hospital.hospitalserver.domain.dto.response.GetDoctorDetailByUsername;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorPageRespDto;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorFullPageRespDto;
 import com.hospital.hospitalserver.domain.entity.HospitalDoctor;
+import com.hospital.hospitalserver.domain.entity.HospitalUser;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -46,4 +48,6 @@ public interface HospitalDoctorMapper {
     Integer updateDoctor(HospitalUpdateDoctorReqDto reqDto);
 
     void deleteDoctorByIds(List<Integer> ids);
+
+    GetDoctorDetailByUsername getDoctorDetailByUsername(HospitalUser user);
 }

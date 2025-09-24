@@ -1,4 +1,4 @@
-package com.hospital.hospitalserver.controller.manager;
+package com.hospital.hospitalserver.controller.clinicroom;
 
 
 import com.hospital.hospitalserver.domain.dto.request.HospitalGetClinicRoomPageReqDto;

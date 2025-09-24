@@ -1,5 +1,6 @@
 package com.hospital.hospitalserver.mapper;
 
+import com.hospital.hospitalserver.domain.BaseUser;
 import com.hospital.hospitalserver.domain.entity.HospitalUser;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -9,8 +10,14 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface HospitalUserMapper {
     /**
-     * 定义方法
-     * 用户登录
+     * 校验用户是否存在
      * */
-    HospitalUser validateUser(HospitalUser user);
+    HospitalUser validateUserExist(HospitalUser user);
+
+    /**
+     * 获取用户信息
+     * @param user
+     * @return
+     */
+    BaseUser getBaseUserByUsername(HospitalUser user);
 }

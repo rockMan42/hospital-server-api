@@ -33,7 +33,7 @@ public class TokenUtils {
                     //发行人
                     .withIssuer("auth0")
                     //存放数据
-                    .withClaim("userpass",user.getPassword())
+                    .withClaim("username",user.getUsername())
                     //过期时间
                     .withExpiresAt(expireAt)
                     .sign(Algorithm.HMAC256(TOKEN_SECRET));

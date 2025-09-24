@@ -5,9 +5,18 @@
 <mapper namespace="com.hospital.hospitalserver.mapper.HospitalUserMapper">
     <!-- 这里写接口文件里对应的SQL映射-->
     <!-- 用户登录验证 -->
-    <select id="validateUser" parameterType="com.hospital.hospitalserver.domain.entity.HospitalUser" resultType="com.hospital.hospitalserver.domain.entity.HospitalUser">
-        select user_id AS userId,
-               username
-        from hospital.h_user_tb where username = #{username} and password = #{password}
+    <select id="validateUserExist" parameterType="com.hospital.hospitalserver.domain.entity.HospitalUser" resultType="com.hospital.hospitalserver.domain.entity.HospitalUser">
+        SELECT * FROM hospital.h_user_tb WHERE username = #{username}
+    </select>
+
+    <select id="getBaseUserByUsername" resultType="com.hospital.hospitalserver.domain.BaseUser">
+        SELECT
+            u.username AS username,
+            u.is_active As isActive,
+            r.role_name As roleName,
+            u.id As id
+        FROM hospital.h_user_tb u
+        LEFT JOIN hospital.h_role_tb r ON r.id = u.role_id
+        WHERE u.username = #{username}
     </select>
 </mapper>

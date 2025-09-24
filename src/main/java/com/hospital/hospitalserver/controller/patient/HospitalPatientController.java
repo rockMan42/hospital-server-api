@@ -1,4 +1,4 @@
-package com.hospital.hospitalserver.controller.manager;
+package com.hospital.hospitalserver.controller.patient;
 
 import com.hospital.hospitalserver.domain.dto.request.HospitalCreatePatientReqDto;
 import com.hospital.hospitalserver.service.HospitalPatientService;

@@ -1,4 +1,4 @@
-package com.hospital.hospitalserver.enums;
+package com.hospital.hospitalserver.domain.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
