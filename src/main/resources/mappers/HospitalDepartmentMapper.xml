@@ -115,4 +115,132 @@
         name
         FROM hospital.h_department_tb
     </select>
+
+    <!--查询科室详情-->
+    <select id="getDepartmentDetail" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetDepartmentDetailReqDto" resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetDepartmentDetailRespDto">
+        SELECT
+            d.id,
+            d.name,
+            d.code,
+            d.description,
+            d.dc_id AS dcId,
+            dc.department_class_name AS departmentClassName,
+            d.doctor_id AS doctorId,
+            dd.name AS doctorName,
+            d.job_title AS jobTitle,
+            d.phone,
+            d.established_time AS establishedTime,
+            d.status,
+            COALESCE(dc_count.doctorCount, 0) AS doctorCount,
+            COALESCE(cr_count.clinicRoomCount, 0) AS clinicRoomCount
+        FROM hospital.h_department_tb d
+        LEFT JOIN hospital.h_doctor_tb dd ON dd.id = d.id
+        LEFT JOIN hospital.h_department_class_tb dc ON dc.id = d.dc_id
+        LEFT JOIN (
+        <!--科室下的医生数量-->SELECT
+                d.id AS id,
+                COUNT(dd.id)
+        AS doctorCount
+            FROM hospital.h_department_tb d
+            LEFT JOIN hospital.h_clinic_room_tb hcct ON hcct.department_id = d.id
+            LEFT JOIN hospital.h_clinic_room_doctor_tb dcrdt ON dcrdt.clinic_room_id = hcct.id
+            LEFT JOIN hospital.h_doctor_tb dd ON dd.id = dcrdt.doctor_id
+            WHERE d.id = #{id}
+            GROUP BY d.id
+        ) dc_count ON dc_count.id = d.id
+        LEFT JOIN (
+        <!--科室下诊室的数量-->
+            SELECT
+                department_id AS id,
+                COUNT(hcr.id) AS clinicRoomCount
+            FROM hospital.h_clinic_room_tb hcr
+            WHERE department_id = #{id}
+            GROUP BY department_id
+        ) cr_count ON cr_count.id = d.id
+        WHERE d.id = #{id}
+    </select>
+
+    <!--修改科室信息-->
+    <update id="updateDepartment" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalUpdateDepartmentReqDto">
+        UPDATE hospital.h_department_tb
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="code != null and code != ''">
+                code = #{code},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="dcId != null">
+                dc_id = #{dcId},
+            </if>
+            <if test="doctorId != null">
+                doctor_id = #{doctorId},
+            </if>
+            <if test="jobTitle != null">
+                job_title = #{jobTitle},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="establishedTime != null">
+                established_time = #{establishedTime},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--新增科室-->
+    <insert id="createDepartment" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalCreateDepartmentReqDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hospital.h_department_tb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name!=null">name,</if>
+            <if test="code!=null">code,</if>
+            <if test="description!=null">description,</if>
+            <if test="dcId!=null">dc_id,</if>
+            <if test="doctorId!=null">doctor_id,</if>
+            <if test="jobTitle!=null">job_title,</if>
+            <if test="phone!=null">phone,</if>
+            <if test="establishedTime!=null">established_time,</if>
+            <if test="status!=null">status,</if>
+            created_at,
+            updated_at
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name!=null">#{name},</if>
+            <if test="code!=null">#{code},</if>
+            <if test="description!=null">#{description},</if>
+            <if test="dcId!=null">#{dcId},</if>
+            <if test="doctorId!=null">#{doctorId},</if>
+            <if test="jobTitle!=null">#{jobTitle},</if>
+            <if test="phone!=null">#{phone},</if>
+            <if test="establishedTime!=null">#{establishedTime},</if>
+            <if test="status!=null">#{status},</if>
+            NOW(),
+            NOW()
+        </trim>
+    </insert>
+    <!--删除科室-->
+    <delete id="deleteDepartmentByIds">
+        DELETE FROM hospital.h_department_tb
+        WHERE id = #{id}
+    </delete>
+
+    <!--查询该科室下的医生数量-->
+    <select id="getDepartmentDoctors" resultType="java.lang.Integer">
+        SELECT
+            count(hddt.id) AS doctorCount
+        FROM hospital.h_department_tb hdt
+        LEFT JOIN hospital.h_clinic_room_tb hcrt ON hcrt.department_id = hdt.id
+        LEFT JOIN hospital.h_clinic_room_doctor_tb hcrdt ON hcrdt.clinic_room_id = hcrt.id
+        LEFT JOIN hospital.h_doctor_tb hddt ON hddt.id = hcrdt.doctor_id
+        WHERE hdt.id = #{id}
+    </select>
 </mapper>

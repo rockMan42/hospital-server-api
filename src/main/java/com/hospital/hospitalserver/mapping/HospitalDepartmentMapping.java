@@ -10,5 +10,8 @@ import java.util.List;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface HospitalDepartmentMapping {
 
+    /**
+     * 将部门列表转换为部门分页响应列表
+     */
     List<HospitalGetDepartmentPageRespDto> toGetDepartmentPageRespDtpList(List<HospitalDepartment> list);
 }

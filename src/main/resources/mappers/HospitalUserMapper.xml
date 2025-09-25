@@ -9,6 +9,7 @@
         SELECT * FROM hospital.h_user_tb WHERE username = #{username}
     </select>
 
+    <!--查询用户基本信息-->
     <select id="getBaseUserByUsername" resultType="com.hospital.hospitalserver.domain.BaseUser">
         SELECT
             u.username AS username,
@@ -18,5 +19,28 @@
         FROM hospital.h_user_tb u
         LEFT JOIN hospital.h_role_tb r ON r.id = u.role_id
         WHERE u.username = #{username}
+    </select>
+
+    <!--新增用户-->
+    <insert id="createUser" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalCreateUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hospital.h_user_tb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username!=null">username,</if>
+            <if test="password!=null">password,</if>
+            <if test="isActive!=null">is_active,</if>
+            <if test="roleId!=null">role_id</if>
+        </trim>
+
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="username!=null">#{username},</if>
+            <if test="password!=null">#{password},</if>
+            <if test="isActive!=null">#{isActive},</if>
+            <if test="roleId!=null">#{roleId}</if>
+        </trim>
+    </insert>
+
+    <!--校验用户是否存在-->
+    <select id="validateUserExistByUsername" resultType="com.hospital.hospitalserver.domain.entity.HospitalUser">
+        SELECT * FROM hospital.h_user_tb WHERE username = #{username}
     </select>
 </mapper>

@@ -11,6 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HospitalGetPatientPageRespDto {
+
+    /**
+     * id
+     */
+    private Integer id;
+
+    /**
+     * 就诊卡号
+     */
+    private String patientId;
+
     /**
      *  姓名
      */
@@ -22,7 +33,7 @@ public class HospitalGetPatientPageRespDto {
     private String gender;
 
     /**
-     * 就诊卡号
+     * 身份证号
      */
     private String idCard;
 

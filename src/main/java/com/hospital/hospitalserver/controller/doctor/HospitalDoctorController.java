@@ -29,8 +29,7 @@ public class HospitalDoctorController {
      */
     @PostMapping("/hospital/doctor/createDoctor")
     public Response createDoctor(@RequestBody @Validated HospitalCreateDoctorReqDto reqDto) {
-        hospitalDoctorService.createDoctor(reqDto);
-        return Response.success();
+        return hospitalDoctorService.createDoctor(reqDto);
     }
 
     /**
@@ -73,14 +72,11 @@ public class HospitalDoctorController {
      */
     @PostMapping("/hospital/doctor/updateDoctor")
     public Response updateDoctor(@RequestBody @Validated HospitalUpdateDoctorReqDto reqDto) {
-        hospitalDoctorService.updateDoctor(reqDto);
-        return Response.success();
+        return hospitalDoctorService.updateDoctor(reqDto);
     }
 
     @PostMapping("/hospital/doctor/deleteDoctor")
     public Response deleteDoctor(@RequestBody @Validated HospitalDeleteDoctorReqDto reqDto) {
-
-        hospitalDoctorService.deleteDoctorByIds(reqDto.getIds());
-        return Response.success();
+        return hospitalDoctorService.deleteDoctorByIds(reqDto.getIds());
     }
 }

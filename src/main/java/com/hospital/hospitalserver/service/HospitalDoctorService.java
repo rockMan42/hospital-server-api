@@ -11,6 +11,7 @@ import com.hospital.hospitalserver.mapper.HospitalClinicRoomMapper;
 import com.hospital.hospitalserver.mapper.HospitalDoctorMapper;
 import com.hospital.hospitalserver.mapping.HospitalDoctorMapping;
 import com.hospital.hospitalserver.util.PageUtils;
+import com.hospital.hospitalserver.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,12 +35,22 @@ public class HospitalDoctorService {
      * @param reqDto
      */
     @Transactional
-    public void createDoctor(HospitalCreateDoctorReqDto reqDto) {
+    public Response createDoctor(HospitalCreateDoctorReqDto reqDto) {
         //添加医生
-        hospitalDoctorMapper.createDoctor(reqDto);
+        Integer id =  hospitalDoctorMapper.createDoctor(reqDto);
 
-        //将医生与诊室绑定
-        hospitalClinicRoomMapper.bindDoctorAndClinicRoom(reqDto);
+        if (id != null) {
+            //将医生与诊室绑定
+            Integer bindCount = hospitalClinicRoomMapper.bindDoctorAndClinicRoom(reqDto);
+            if (bindCount != null) {
+                return Response.success("新增并绑定成功");
+            }else {
+                return Response.success("绑定失败");
+            }
+        }else {
+            return Response.error("新增失败");
+        }
+
     }
 
     /**
@@ -82,13 +93,20 @@ public class HospitalDoctorService {
      * @param reqDto
      */
     @Transactional
-    public void updateDoctor(HospitalUpdateDoctorReqDto reqDto) {
+    public Response updateDoctor(HospitalUpdateDoctorReqDto reqDto) {
         // 更新医生基本信息
-        hospitalDoctorMapper.updateDoctor(reqDto);
+        Integer count = hospitalDoctorMapper.updateDoctor(reqDto);
         
         // 如果传入了诊室ID，则更新医生与诊室的绑定关系
-        if (reqDto.getClinicRoomId() != null) {
-            hospitalClinicRoomMapper.updateDoctorClinicRoomBinding(reqDto.getId(), reqDto.getClinicRoomId());
+        if (reqDto.getClinicRoomId() != null && count != null) {
+            Integer updatedCount = hospitalClinicRoomMapper.updateDoctorClinicRoomBinding(reqDto.getId(), reqDto.getClinicRoomId());
+            if (updatedCount != null) {
+                return Response.success("更新成功");
+            }else {
+                return Response.error("解绑失败");
+            }
+        }else{
+            return Response.error("更新失败");
         }
     }
 
@@ -97,11 +115,22 @@ public class HospitalDoctorService {
      * @param ids
      */
     @Transactional
-    public void deleteDoctorByIds(List<Integer> ids) {
+    public Response deleteDoctorByIds(List<Integer> ids) {
         //删除医生
-        hospitalDoctorMapper.deleteDoctorByIds(ids);
+        Integer count = hospitalDoctorMapper.deleteDoctorByIds(ids);
 
-        //解绑医生和诊室
-        hospitalClinicRoomMapper.unBindDoctorAndClinicRoom(ids);
+        if (count != null) {
+            //解绑医生和诊室
+            Integer unBindCount = hospitalClinicRoomMapper.unBindDoctorAndClinicRoom(ids);
+            if (unBindCount != null) {
+                return Response.success("更新并解绑成功");
+            }else {
+                return Response.error("解绑失败");
+            }
+        }else{
+            Response.error("更新失败");
+        }
+
+        return null;
     }
 }

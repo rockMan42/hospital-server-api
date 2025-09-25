@@ -1,9 +1,11 @@
 package com.hospital.hospitalserver.controller.user;
 
+import com.hospital.hospitalserver.domain.dto.request.HospitalCreateUser;
 import com.hospital.hospitalserver.domain.entity.HospitalUser;
 import com.hospital.hospitalserver.service.HospitalUserService;
 import com.hospital.hospitalserver.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -23,5 +25,16 @@ public class UserController {
     @PostMapping("/login")
     public Response login(@RequestBody HospitalUser user){
         return userService.login(user);
+    }
+
+    /**
+     * 创建用户
+     * @param createUser
+     * @return
+     */
+    @PostMapping("/createUser")
+    public Response createUser(@RequestBody @Validated HospitalCreateUser createUser){
+        int id =  userService.createUser(createUser);
+        return Response.success(id);
     }
 }

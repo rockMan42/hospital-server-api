@@ -4,6 +4,7 @@ import com.hospital.hospitalserver.domain.BaseDomain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 /**
  * 患者
@@ -11,7 +12,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class HospitalPatient extends BaseDomain {
+    /**
+     * 就诊卡号
+     */
+    private String patientId;
     /**
      *  姓名
      */
@@ -23,7 +29,7 @@ public class HospitalPatient extends BaseDomain {
     private String gender;
 
     /**
-     * 就诊卡号
+     * 身份证号
      */
     private String idCard;
 

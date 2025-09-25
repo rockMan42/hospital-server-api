@@ -1,8 +1,9 @@
 package com.hospital.hospitalserver.mapper;
 
-import com.hospital.hospitalserver.domain.dto.request.HospitalCreateDoctorReqDto;
-import com.hospital.hospitalserver.domain.dto.request.HospitalGetClinicRoomPageReqDto;
+import com.hospital.hospitalserver.domain.dto.request.*;
+import com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomDetailRespDto;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomPageRespDto;
+import com.hospital.hospitalserver.domain.entity.HospitalClinicRoom;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,14 +17,62 @@ public interface HospitalClinicRoomMapper {
     List<HospitalGetClinicRoomPageRespDto> getClinicRoomSlimNameList(HospitalGetClinicRoomPageReqDto requestDto);
 
     /**
+     * 获取诊室分页列表
+     */
+    List<HospitalGetClinicRoomDetailRespDto> getClinicRoomPageList(HospitalGetClinicRoomPageReqDto reqDto);
+
+    /**
+     * 获取诊室总数
+     */
+    Integer getClinicRoomCount(HospitalGetClinicRoomPageReqDto reqDto);
+
+    /**
+     * 查询诊室详情
+     */
+    HospitalGetClinicRoomDetailRespDto getClinicRoomDetail(HospitalGetClinicRoomDetailReqDto reqDto);
+
+    /**
+     * 新增诊室
+     */
+    Integer createClinicRoom(HospitalClinicRoom clinicRoom);
+
+    /**
+     * 更新诊室信息
+     */
+    Integer updateClinicRoom(HospitalClinicRoom clinicRoom);
+
+    /**
+     * 批量删除诊室
+     */
+    Integer deleteClinicRoomByIds(List<Integer> ids);
+
+    /**
+     * 检查诊室编号是否存在
+     */
+    Integer checkRoomNumberExists(String roomNumber);
+
+    /**
+     * 检查诊室编号是否存在（排除自己）
+     */
+    Integer checkRoomNumberExistsExcludeSelf(String roomNumber, Integer id);
+
+    /**
+     * 检查诊室是否有医生关联
+     */
+    Integer checkDoctorsInClinicRooms(Integer id);
+
+    /**
      * 绑定医生与诊室
      */
-    void bindDoctorAndClinicRoom(HospitalCreateDoctorReqDto requestDto);
+    Integer bindDoctorAndClinicRoom(HospitalCreateDoctorReqDto requestDto);
 
     /**
      * 更新医生的诊室绑定关系
      */
-    void updateDoctorClinicRoomBinding(Integer doctorId, Integer clinicRoomId);
+    Integer updateDoctorClinicRoomBinding(Integer doctorId, Integer clinicRoomId);
 
-    void unBindDoctorAndClinicRoom(List<Integer> ids);
+    /**
+     * 解绑医生与诊室
+     */
+    Integer unBindDoctorAndClinicRoom(List<Integer> ids);
 }

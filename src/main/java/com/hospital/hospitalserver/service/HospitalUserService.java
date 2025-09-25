@@ -2,6 +2,7 @@ package com.hospital.hospitalserver.service;
 
 
 import com.hospital.hospitalserver.domain.BaseUser;
+import com.hospital.hospitalserver.domain.dto.request.HospitalCreateUser;
 import com.hospital.hospitalserver.domain.entity.HospitalUser;
 import com.hospital.hospitalserver.domain.enums.ResultCodeEnum;
 import com.hospital.hospitalserver.mapper.HospitalDoctorMapper;
@@ -11,6 +12,7 @@ import com.hospital.hospitalserver.mapper.HospitalUserMapper;
 import com.hospital.hospitalserver.util.EncryptHelper;
 import com.hospital.hospitalserver.util.Response;
 import com.hospital.hospitalserver.util.TokenUtils;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ import java.util.Map;
 public class HospitalUserService {
 
     @Autowired
-    private HospitalUserMapper userMapper;
+    private HospitalUserMapper hospitalUserMapper;
 
     @Autowired
     private HospitalDoctorMapper hospitalDoctorMapper;
@@ -42,7 +44,7 @@ public class HospitalUserService {
      */
     public Response login(HospitalUser user) {
         // 1.validate exist
-        HospitalUser u = userMapper.validateUserExist(user);
+        HospitalUser u = hospitalUserMapper.validateUserExist(user);
 
         if (u == null) {
             log.error("用户不存在");
@@ -67,7 +69,7 @@ public class HospitalUserService {
 
         //get user detail by role
         Object userData = null;
-        BaseUser baseUser = userMapper.getBaseUserByUsername(user);
+        BaseUser baseUser = hospitalUserMapper.getBaseUserByUsername(user);
         String roleName = baseUser.getRoleName();
         switch (roleName) {
             case "doctor":
@@ -90,5 +92,24 @@ public class HospitalUserService {
         response.put("role",roleName);
 
         return Response.success(ResultCodeEnum.LOGIN_SUCCESS,response);
+    }
+
+    /**
+     * 创建用户
+     * @param createUser
+     * @return
+     */
+    public Integer createUser(HospitalCreateUser createUser) {
+        // validate user exist
+        HospitalUser hospitalUser = hospitalUserMapper.validateUserExistByUsername(createUser);
+        if (hospitalUser != null){
+            log.info("username:{}已存在",hospitalUser.getUsername());
+            return hospitalUser.getId();
+        }
+
+        String encodePassword = EncryptHelper.SHA(createUser.getPassword());
+        createUser.setPassword(encodePassword);
+        Integer id = hospitalUserMapper.createUser(createUser);
+        return id;
     }
 }

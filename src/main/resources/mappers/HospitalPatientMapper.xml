@@ -5,8 +5,8 @@
 <mapper namespace="com.hospital.hospitalserver.mapper.HospitalPatientMapper">
 
     <insert id="createPatient" parameterType="com.hospital.hospitalserver.domain.entity.HospitalPatient">
-        insert into hospital.h_patient_tb(name,gender,id_card,birth_date,phone,address,remark)
-        values(#{name},#{gender},#{idCard},#{birthDate},#{phone},#{address},#{remark})
+        insert into hospital.h_patient_tb(name,gender,id_card,birth_date,phone,address,remark,patient_id)
+        values(#{name},#{gender},#{idCard},#{birthDate},#{phone},#{address},#{remark},#{patientId})
     </insert>
 
     <select id="getPatientPage" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetPatientReqDto" resultType="com.hospital.hospitalserver.domain.entity.HospitalPatient">
@@ -18,7 +18,8 @@
             birth_date AS birthDate,
             phone,
             address,
-            remark
+            remark,
+            patient_id AS patientId
         from hospital.h_patient_tb
             <where>
                 <if test="name != null">
@@ -48,4 +49,43 @@
                 </if>
             </where>
     </select>
+
+    <select id="getPatientDetail" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetPatientDetailReqDto" resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetPatientPageRespDto">
+        select
+            id,
+            name,
+            gender,
+            id_card AS idCard,
+            birth_date AS birthDate,
+            phone,
+            address,
+            remark,
+            patient_id AS patientId
+        from hospital.h_patient_tb
+        where id = #{id}
+        limit 1
+    </select>
+
+    <update id="updatePatient" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalUpdatePatientReqDto">
+        update hospital.h_patient_tb
+        <set>
+            <if test="patientId != null">patient_id = #{patientId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="birthDate != null">birth_date = #{birthDate},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePatientByIds" parameterType="java.util.List">
+        delete from hospital.h_patient_tb
+        where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

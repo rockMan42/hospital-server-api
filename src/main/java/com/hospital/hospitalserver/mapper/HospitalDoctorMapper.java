@@ -8,7 +8,6 @@ import com.hospital.hospitalserver.domain.dto.request.HospitalUpdateDoctorReqDto
 import com.hospital.hospitalserver.domain.dto.response.GetDoctorDetailByUsername;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorPageRespDto;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorFullPageRespDto;
-import com.hospital.hospitalserver.domain.entity.HospitalDoctor;
 import com.hospital.hospitalserver.domain.entity.HospitalUser;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -47,7 +46,13 @@ public interface HospitalDoctorMapper {
      */
     Integer updateDoctor(HospitalUpdateDoctorReqDto reqDto);
 
-    void deleteDoctorByIds(List<Integer> ids);
+    /**
+     * 删除医生
+     */
+    Integer deleteDoctorByIds(List<Integer> ids);
 
+    /**
+     * 根据用户名查询医生详情
+     */
     GetDoctorDetailByUsername getDoctorDetailByUsername(HospitalUser user);
 }

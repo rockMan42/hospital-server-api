@@ -50,4 +50,9 @@ public class HospitalCreatePatientReqDto {
      * 备注
      */
     private String remark;
+
+    /**
+     * 就诊卡号
+     */
+    private String patientId;
 }

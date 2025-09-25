@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hospital.hospitalserver.mapper.HospitalClinicRoomMapper">
 
+    <!-- 获取诊室简单列表（名称） -->
     <select id="getClinicRoomSlimNameList"
             parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetClinicRoomPageReqDto"
             resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomPageRespDto">
@@ -11,9 +12,161 @@
             cc.id AS clinicRoomId,
             cc.name AS name
         FROM hospital.h_clinic_room_tb cc
-        WHERE cc.department_id = #{departmentId}
+        WHERE 1=1
+        <if test="departmentId != null">
+            AND cc.department_id = #{departmentId}
+        </if>
+        AND cc.status = 0
+        ORDER BY cc.id DESC
     </select>
 
+    <!-- 获取诊室分页列表 -->
+    <select id="getClinicRoomPageList"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetClinicRoomPageReqDto"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomDetailRespDto">
+        SELECT
+            cc.id,
+            cc.name,
+            cc.room_number AS roomNumber,
+            cc.department_id AS departmentId,
+            d.name AS departmentName,
+            cc.location,
+            cc.status
+        FROM hospital.h_clinic_room_tb cc
+        LEFT JOIN hospital.h_department_tb d ON cc.department_id = d.id
+        WHERE 1=1
+        <if test="departmentName != null and departmentName != ''">
+            AND d.name LIKE CONCAT('%', #{departmentName}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            AND cc.name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="roomNumber != null and roomNumber != ''">
+            AND cc.room_number LIKE CONCAT('%', #{roomNumber}, '%')
+        </if>
+        <if test="status != null">
+            AND cc.status = #{status}
+        </if>
+        ORDER BY cc.id DESC
+        LIMIT #{start},#{size}
+    </select>
+
+    <!-- 获取诊室总数 -->
+    <select id="getClinicRoomCount"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetClinicRoomPageReqDto"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM hospital.h_clinic_room_tb cc
+        LEFT JOIN hospital.h_department_tb d ON cc.department_id = d.id
+        WHERE 1=1
+        <if test="departmentName != null and departmentName != ''">
+            AND d.name LIKE CONCAT('%', #{departmentName}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            AND cc.name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="roomNumber != null and roomNumber != ''">
+            AND cc.room_number LIKE CONCAT('%', #{roomNumber}, '%')
+        </if>
+        <if test="status != null">
+            AND cc.status = #{status}
+        </if>
+    </select>
+
+    <!-- 查询诊室详情 -->
+    <select id="getClinicRoomDetail"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetClinicRoomDetailReqDto"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomDetailRespDto">
+        SELECT
+            cc.id,
+            cc.name,
+            cc.room_number AS roomNumber,
+            cc.department_id AS departmentId,
+            d.name AS departmentName,
+            cc.location,
+            cc.status
+        FROM hospital.h_clinic_room_tb cc
+        LEFT JOIN hospital.h_department_tb d ON cc.department_id = d.id
+        WHERE cc.id = #{id}
+    </select>
+
+    <!-- 新增诊室 -->
+    <insert id="createClinicRoom"
+            parameterType="com.hospital.hospitalserver.domain.entity.HospitalClinicRoom"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hospital.h_clinic_room_tb (
+            name,
+            room_number,
+            department_id,
+            location,
+            status
+        ) VALUES (
+            #{name},
+            #{roomNumber},
+            #{departmentId},
+            #{location},
+            #{status}
+        )
+    </insert>
+
+    <!-- 更新诊室信息 -->
+    <update id="updateClinicRoom"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalUpdateClinicRoomReqDto">
+        UPDATE hospital.h_clinic_room_tb
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="roomNumber != null and roomNumber != ''">
+                room_number = #{roomNumber},
+            </if>
+            <if test="departmentId != null">
+                department_id = #{departmentId},
+            </if>
+            <if test="location != null">
+                location = #{location},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量删除诊室 -->
+    <delete id="deleteClinicRoomByIds">
+        DELETE FROM hospital.h_clinic_room_tb
+        WHERE id IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 检查诊室编号是否存在 -->
+    <select id="checkRoomNumberExists" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM hospital.h_clinic_room_tb
+        WHERE room_number = #{roomNumber}
+    </select>
+
+    <!-- 检查诊室编号是否存在（排除自己） -->
+    <select id="checkRoomNumberExistsExcludeSelf" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM hospital.h_clinic_room_tb
+        WHERE room_number = #{roomNumber}
+        AND id != #{id}
+    </select>
+
+    <!-- 检查诊室是否有医生关联 -->
+    <select id="checkDoctorsInClinicRooms" resultType="java.lang.Integer">
+        SELECT COUNT(hdt.id) doctorCount
+        FROM hospital.h_clinic_room_tb hcrt
+        LEFT JOIN hospital.h_clinic_room_doctor_tb hcrdt ON hcrdt.clinic_room_id = hcrt.id
+        LEFT JOIN hospital.h_doctor_tb hdt ON hdt.id = hcrdt.doctor_id
+        WHERE hcrt.id = #{id}
+    </select>
+
+    <!--绑定医生和诊室-->
     <insert id="bindDoctorAndClinicRoom"
             parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalCreateDoctorReqDto">
         INSERT INTO hospital.h_clinic_room_doctor_tb (clinic_room_id, doctor_id)
