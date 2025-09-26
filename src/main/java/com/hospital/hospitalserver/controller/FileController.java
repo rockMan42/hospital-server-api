@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -30,32 +30,31 @@ public class FileController {
      * 头像上传接口
      */
     @PostMapping("/file/uploadAvatar")
-    public Response uploadAvatar(MultipartHttpServletRequest multiRequest,
+    public Response uploadAvatar(@RequestParam("file") MultipartFile file,
                                  HttpServletRequest request) {
-        Response uploadResponse = uploadFile(multiRequest, request, "avatar");
-        return uploadResponse;
+        return uploadFile(file, request, "avatar");
     }
 
     /**
      * 个人照片上传接口
      */
     @PostMapping("/file/uploadPhoto")
-    public Response uploadPhoto(MultipartHttpServletRequest multiRequest, HttpServletRequest request) {
-        return uploadFile(multiRequest, request, "photo");
+    public Response uploadPhoto(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        return uploadFile(file, request, "photo");
     }
 
     /**
      * 图书封面照片上传
      * */
     @PostMapping("/file/uploadBookCover")
-    public Response uploadBookCover(MultipartHttpServletRequest multiRequest, HttpServletRequest request) {
-        return uploadFile(multiRequest, request, "book");
+    public Response uploadBookCover(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        return uploadFile(file, request, "book");
     }
 
     /**
      * 统一的文件上传处理方法
      */
-    private Response uploadFile(MultipartHttpServletRequest multiRequest, HttpServletRequest request, String type) {
+    private Response uploadFile(MultipartFile file, HttpServletRequest request, String type) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String datePrefix = dateFormat.format(new Date());
         String savePath = "src/main/resources/" + PIC_PATH + type + "/";
@@ -66,8 +65,13 @@ public class FileController {
         }
 
         try {
-            String originalFilename = multiRequest.getFile("file").getOriginalFilename();
-            if (originalFilename == null) {
+            // 检查文件是否为空
+            if (file.isEmpty()) {
+                return new Response(401, "上传文件不能为空", null);
+            }
+
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null || originalFilename.trim().isEmpty()) {
                 return new Response(401, "文件名不能为空", null);
             }
 
@@ -78,7 +82,7 @@ public class FileController {
             }
 
             // 验证文件大小（限制为2MB）
-            long fileSize = multiRequest.getFile("file").getSize();
+            long fileSize = file.getSize();
             if (fileSize > 2 * 1024 * 1024) {
                 return new Response(401, "文件大小不能超过2MB", null);
             }
@@ -88,17 +92,18 @@ public class FileController {
             String absolutePath = folder.getAbsolutePath();
 
             File fileToSave = new File(absolutePath + File.separator + saveName);
-            multiRequest.getFile("file").transferTo(fileToSave);
+            file.transferTo(fileToSave);
 
             // 返回可访问的URL路径
             String returnPath = request.getScheme() + "://"
                     + request.getServerName() + ":" + request.getServerPort()
                     + "/img/" + type + "/" + datePrefix + "/" + saveName;
 
+            log.info("文件上传成功: {}", returnPath);
             return new Response(200, "上传成功", returnPath);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("文件上传失败: ", e);
             return new Response(401, "上传失败: " + e.getMessage(), null);
         }
     }

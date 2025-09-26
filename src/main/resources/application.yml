@@ -6,6 +6,12 @@ spring:
     url: jdbc:mysql://localhost:3306/hospital?useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: root
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+      max-request-size: 2MB
+      file-size-threshold: 1KB
 server:
   port: 8081
 
