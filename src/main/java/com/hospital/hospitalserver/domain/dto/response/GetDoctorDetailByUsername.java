@@ -73,4 +73,9 @@ public class GetDoctorDetailByUsername {
      * 备注信息
      */
     private String description;
+
+    /**
+     * 医生头像
+     */
+    private String avatar;
 }

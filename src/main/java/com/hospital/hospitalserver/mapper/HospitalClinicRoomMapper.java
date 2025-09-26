@@ -5,7 +5,7 @@ import com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomDeta
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomPageRespDto;
 import com.hospital.hospitalserver.domain.entity.HospitalClinicRoom;
 import org.apache.ibatis.annotations.Mapper;
-
+import com.hospital.hospitalserver.domain.dto.request.HospitalCreateDoctorReqDto;
 import java.util.List;
 
 @Mapper

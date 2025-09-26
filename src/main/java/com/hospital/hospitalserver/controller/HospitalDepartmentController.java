@@ -1,4 +1,4 @@
-package com.hospital.hospitalserver.controller.department;
+package com.hospital.hospitalserver.controller;
 
 import com.hospital.hospitalserver.domain.dto.request.*;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDepartmentDetailRespDto;

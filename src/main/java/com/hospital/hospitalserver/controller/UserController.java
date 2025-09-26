@@ -1,4 +1,4 @@
-package com.hospital.hospitalserver.controller.user;
+package com.hospital.hospitalserver.controller;
 
 import com.hospital.hospitalserver.domain.dto.request.HospitalCreateUser;
 import com.hospital.hospitalserver.domain.entity.HospitalUser;

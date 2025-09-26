@@ -45,7 +45,8 @@
         hd.major_direct AS majorDirect,
         hd.phone,
         hd.enter_date AS enterDate,
-        hd.status
+        hd.status,
+        hd.avatar
         FROM hospital.h_doctor_tb hd
         LEFT JOIN hospital.h_clinic_room_doctor_tb hcd ON hd.id = hcd.doctor_id
         LEFT JOIN hospital.h_clinic_room_tb hc ON hcd.clinic_room_id = hc.id
@@ -116,7 +117,8 @@
                hd.status,
                hd.gender            AS gender,
                hd.age               AS age,
-               hd.description       AS description
+               hd.description       AS description,
+               hd.avatar            AS avatar
         FROM hospital.h_doctor_tb hd
                  LEFT JOIN hospital.h_profashion_title_tb hpt ON hpt.id = hd.pt_id
                  LEFT JOIN hospital.h_clinic_room_doctor_tb hcd ON hd.id = hcd.doctor_id
@@ -159,6 +161,9 @@
             <if test="description != null">
                 description = #{description},
             </if>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar}
+            </if>
         </set>
         WHERE id = #{id}
     </update>
@@ -175,7 +180,8 @@
                                           phone,
                                           enter_date,
                                           status,
-                                          description)
+                                          description,
+                                          avatar)
         VALUES (#{name},
                 #{workId},
                 #{gender},
@@ -185,7 +191,8 @@
                 #{phone},
                 #{enterDate},
                 #{status},
-                #{description})
+                #{description},
+                #{avatar})
     </insert>
 
     <!--删除医生-->
@@ -214,7 +221,8 @@
                hd.status,
                hd.gender            AS gender,
                hd.age               AS age,
-               hd.description       AS description
+               hd.description       AS description,
+               hd.avatar            AS avatar
         FROM hospital.h_doctor_tb hd
                  LEFT JOIN hospital.h_profashion_title_tb hpt ON hpt.id = hd.pt_id
                  LEFT JOIN hospital.h_clinic_room_doctor_tb hcd ON hd.id = hcd.doctor_id

@@ -3,10 +3,7 @@ package com.hospital.hospitalserver.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
-import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +17,17 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Autowired
     private TokenInterceptor tokenInterceptor;
+
+    /***
+     * 自定义资源映射
+     * 上传静态文件
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/img/**")
+                .addResourceLocations("file:src/main/resources/static/img/");
+    }
 
     /**
      * 解决跨域请求
@@ -58,6 +66,7 @@ public class WebConfiguration implements WebMvcConfigurer {
         excludePath.add("/user/createUser");  //注册
         excludePath.add("/activeUser/*");  //激活
         excludePath.add("/home/getTest");  //排除特定路径
+        excludePath.add("/img/**");  //静态图片资源（头像等）
 //        excludePath.add("/static/**");  //静态资源
 //        excludePath.add("/assets/**");  //静态资源
         registry.addInterceptor(tokenInterceptor)

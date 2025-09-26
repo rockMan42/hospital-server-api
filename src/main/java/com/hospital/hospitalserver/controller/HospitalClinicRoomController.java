@@ -1,7 +1,6 @@
-package com.hospital.hospitalserver.controller.clinicroom;
+package com.hospital.hospitalserver.controller;
 
 import com.hospital.hospitalserver.domain.dto.request.*;
-import com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomDetailRespDto;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomPageRespDto;
 import com.hospital.hospitalserver.service.HospitalClinicRoomService;
 import com.hospital.hospitalserver.util.PageUtils;
