@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.hospitalserver.mapper.HospitalFeeCategoryMapper">
+
+    <!--查询费用类别分页列表-->
+    <select id="getFeeCategoryPageList"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetFeeCategoryPageReqDto"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetFeeCategoryPageRespDto">
+        SELECT
+            hfc.id,
+            hfc.category_code AS categoryCode,
+            hfc.category_name AS categoryName,
+            hfc.category_type AS categoryType,
+            CASE hfc.category_type
+                WHEN 1 THEN '挂号费'
+                WHEN 2 THEN '检查费'
+                WHEN 3 THEN '治疗费'
+                WHEN 4 THEN '药品费'
+                WHEN 5 THEN '材料费'
+                WHEN 6 THEN '手术费'
+                WHEN 7 THEN '住院费'
+                ELSE '未知'
+            END AS categoryTypeName,
+            hfc.description,
+            hfc.is_active AS isActive,
+            hfc.create_time AS createTime
+        FROM hospital.h_fee_category_tb hfc
+        <where>
+            <if test="categoryCode != null and categoryCode != ''">
+                AND hfc.category_code LIKE CONCAT('%', #{categoryCode}, '%')
+            </if>
+            <if test="categoryName != null and categoryName != ''">
+                AND hfc.category_name LIKE CONCAT('%', #{categoryName}, '%')
+            </if>
+            <if test="categoryType != null">
+                AND hfc.category_type = #{categoryType}
+            </if>
+            <if test="isActive != null">
+                AND hfc.is_active = #{isActive}
+            </if>
+        </where>
+        ORDER BY hfc.id DESC
+        LIMIT #{start}, #{size}
+    </select>
+
+    <!--查询费用类别分页列表总数-->
+    <select id="getFeeCategoryPageListCount"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetFeeCategoryPageReqDto"
+            resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM hospital.h_fee_category_tb hfc
+        <where>
+            <if test="categoryCode != null and categoryCode != ''">
+                AND hfc.category_code LIKE CONCAT('%', #{categoryCode}, '%')
+            </if>
+            <if test="categoryName != null and categoryName != ''">
+                AND hfc.category_name LIKE CONCAT('%', #{categoryName}, '%')
+            </if>
+            <if test="categoryType != null">
+                AND hfc.category_type = #{categoryType}
+            </if>
+            <if test="isActive != null">
+                AND hfc.is_active = #{isActive}
+            </if>
+        </where>
+    </select>
+
+    <!--查询费用类别列表（简化版）-->
+    <select id="getFeeCategoryList"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetFeeCategoryListRespDto">
+        SELECT
+            hfc.id,
+            hfc.category_name AS categoryName
+        FROM hospital.h_fee_category_tb hfc
+        WHERE hfc.is_active = 1
+        ORDER BY hfc.id ASC
+    </select>
+
+    <!--查询费用类别详情-->
+    <select id="getFeeCategoryDetail"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetFeeCategoryDetailReqDto"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetFeeCategoryDetailRespDto">
+        SELECT
+            hfc.id,
+            hfc.category_code AS categoryCode,
+            hfc.category_name AS categoryName,
+            hfc.category_type AS categoryType,
+            CASE hfc.category_type
+                WHEN 1 THEN '挂号费'
+                WHEN 2 THEN '检查费'
+                WHEN 3 THEN '治疗费'
+                WHEN 4 THEN '药品费'
+                WHEN 5 THEN '材料费'
+                WHEN 6 THEN '手术费'
+                WHEN 7 THEN '住院费'
+                ELSE '未知'
+            END AS categoryTypeName,
+            hfc.description,
+            hfc.is_active AS isActive,
+            hfc.create_time AS createTime
+        FROM hospital.h_fee_category_tb hfc
+        WHERE hfc.id = #{id}
+        LIMIT 1
+    </select>
+
+</mapper>

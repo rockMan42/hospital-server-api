@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.hospitalserver.mapper.HospitalFeeItemMapper">
+
+    <!--查询费用项目分页列表-->
+    <select id="getFeeItemPageList"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetFeeItemPageReqDto"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetFeeItemPageRespDto">
+        SELECT
+            hfi.id,
+            hfi.item_code AS itemCode,
+            hfi.item_name AS itemName,
+            hfi.category_id AS categoryId,
+            hfc.category_name AS categoryName,
+            hfi.standard_price AS standardPrice,
+            hfi.insurance_price AS insurancePrice,
+            hfi.cost_price AS costPrice,
+            hfi.unit,
+            hfi.insurance_type AS insuranceType,
+            CASE hfi.insurance_type
+                WHEN 'A' THEN '甲类'
+                WHEN 'B' THEN '乙类'
+                WHEN 'C' THEN '丙类'
+                WHEN 'self' THEN '自费'
+                ELSE '未知'
+            END AS insuranceTypeName,
+            hfi.department_ids AS departmentIds,
+            hfi.description,
+            hfi.is_active AS isActive,
+            hfi.create_time AS createTime,
+            hfi.update_time AS updateTime
+        FROM hospital.h_fee_item_tb hfi
+        LEFT JOIN hospital.h_fee_category_tb hfc ON hfi.category_id = hfc.id
+        <where>
+            <if test="itemName != null and itemName != ''">
+                AND hfi.item_name LIKE CONCAT('%', #{itemName}, '%')
+            </if>
+            <if test="categoryId != null">
+                AND hfi.category_id = #{categoryId}
+            </if>
+            <if test="departmentIds != null">
+                AND JSON_CONTAINS(hfi.department_ids, #{departmentIds})
+            </if>
+            <if test="isActive != null">
+                AND hfi.is_active = #{isActive}
+            </if>
+        </where>
+        ORDER BY hfi.id DESC
+        LIMIT #{start}, #{size}
+    </select>
+
+    <!--查询费用项目分页列表总数-->
+    <select id="getFeeItemPageListCount"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetFeeItemPageReqDto"
+            resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM hospital.h_fee_item_tb hfi
+        LEFT JOIN hospital.h_fee_category_tb hfc ON hfi.category_id = hfc.id
+        <where>
+            <if test="itemName != null and itemName != ''">
+                AND hfi.item_name LIKE CONCAT('%', #{itemName}, '%')
+            </if>
+            <if test="categoryId != null">
+                AND hfi.category_id = #{categoryId}
+            </if>
+            <if test="departmentIds != null">
+                AND JSON_CONTAINS(hfi.department_ids, #{departmentIds})
+            </if>
+            <if test="isActive != null">
+                AND hfi.is_active = #{isActive}
+            </if>
+        </where>
+    </select>
+
+    <!--查询费用项目详情-->
+    <select id="getFeeItemDetail"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetFeeItemDetailReqDto"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetFeeItemDetailRespDto">
+        SELECT
+            hfi.id,
+            hfi.item_code AS itemCode,
+            hfi.item_name AS itemName,
+            hfi.category_id AS categoryId,
+            hfc.category_name AS categoryName,
+            hfi.standard_price AS standardPrice,
+            hfi.insurance_price AS insurancePrice,
+            hfi.cost_price AS costPrice,
+            hfi.unit,
+            hfi.insurance_type AS insuranceType,
+            CASE hfi.insurance_type
+                WHEN 'A' THEN '甲类'
+                WHEN 'B' THEN '乙类'
+                WHEN 'C' THEN '丙类'
+                WHEN 'self' THEN '自费'
+                ELSE '未知'
+            END AS insuranceTypeName,
+            hfi.department_ids AS departmentIds,
+            hfi.description,
+            hfi.is_active AS isActive,
+            hfi.create_time AS createTime,
+            hfi.update_time AS updateTime
+        FROM hospital.h_fee_item_tb hfi
+        LEFT JOIN hospital.h_fee_category_tb hfc ON hfi.category_id = hfc.id
+        WHERE hfi.id = #{id}
+        LIMIT 1
+    </select>
+
+    <!--添加费用项目-->
+    <insert id="addFeeItem"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalAddFeeItemReqDto">
+        INSERT INTO hospital.h_fee_item_tb (
+            item_code,
+            item_name,
+            category_id,
+            standard_price,
+            insurance_price,
+            cost_price,
+            unit,
+            insurance_type,
+            department_ids,
+            description,
+            is_active,
+            create_time
+        ) VALUES (
+            #{itemCode},
+            #{itemName},
+            #{categoryId},
+            #{standardPrice},
+            #{insurancePrice},
+            #{costPrice},
+            #{unit},
+            #{insuranceType},
+            #{departmentIds},
+            #{description},
+            #{isActive},
+            NOW()
+        )
+    </insert>
+
+    <!--更新费用项目-->
+    <update id="updateFeeItem"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalUpdateFeeItemReqDto">
+        UPDATE hospital.h_fee_item_tb
+        SET
+            item_code = #{itemCode},
+            item_name = #{itemName},
+            category_id = #{categoryId},
+            standard_price = #{standardPrice},
+            insurance_price = #{insurancePrice},
+            cost_price = #{costPrice},
+            unit = #{unit},
+            insurance_type = #{insuranceType},
+            department_ids = #{departmentIds},
+            description = #{description},
+            is_active = #{isActive},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!--批量删除费用项目-->
+    <delete id="batchDeleteFeeItem"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalBatchDeleteFeeItemReqDto">
+        DELETE FROM hospital.h_fee_item_tb
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getFeeItems" resultType="com.hospital.hospitalserver.domain.dto.response.FeeItemsRespDto">
+        SELECT
+            COUNT(*) as totalCount,
+            SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as activeCount,
+            SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) as inactiveCount,
+            SUM(CASE WHEN DATE(update_time) = CURDATE() THEN 1 ELSE 0 END) as todayUpdateCount
+        FROM h_fee_item_tb
+    </select>
+</mapper>
