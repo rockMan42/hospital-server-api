@@ -7,6 +7,7 @@ import com.hospital.hospitalserver.domain.dto.request.HospitalGetDoctorDetailReq
 import com.hospital.hospitalserver.domain.dto.request.HospitalUpdateDoctorReqDto;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorPageRespDto;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorFullPageRespDto;
+import com.hospital.hospitalserver.domain.dto.response.HospitalGetProfessionTitleRespDto;
 import com.hospital.hospitalserver.mapper.HospitalClinicRoomMapper;
 import com.hospital.hospitalserver.mapper.HospitalDoctorMapper;
 import com.hospital.hospitalserver.mapping.HospitalDoctorMapping;
@@ -132,5 +133,13 @@ public class HospitalDoctorService {
         }
 
         return null;
+    }
+
+    /**
+     * 查询所有职称列表
+     * @return
+     */
+    public List<HospitalGetProfessionTitleRespDto> getProfessionTitleList() {
+        return hospitalDoctorMapper.getProfessionTitleList();
     }
 }

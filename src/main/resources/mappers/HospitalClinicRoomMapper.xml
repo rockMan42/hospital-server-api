@@ -6,18 +6,11 @@
 
     <!-- 获取诊室简单列表（名称） -->
     <select id="getClinicRoomSlimNameList"
-            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetClinicRoomPageReqDto"
             resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomPageRespDto">
         SELECT
             cc.id AS clinicRoomId,
             cc.name AS name
         FROM hospital.h_clinic_room_tb cc
-        WHERE 1=1
-        <if test="departmentId != null">
-            AND cc.department_id = #{departmentId}
-        </if>
-        AND cc.status = 0
-        ORDER BY cc.id DESC
     </select>
 
     <!-- 获取诊室分页列表 -->
@@ -186,6 +179,33 @@
         <where>
             <if test="ids != null">
                 doctor_id IN
+                <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+    <!--绑定护士和诊室-->
+    <insert id="bindNurseAndClinicRoom"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalCreateNurseReqDto">
+        INSERT INTO hospital.h_clinic_room_nurse_tb (clinic_room_id, nurse_id)
+        VALUES (#{clinicRoomId}, #{id})
+    </insert>
+
+    <!--更新护士的诊室绑定关系-->
+    <update id="updateNurseClinicRoomBinding">
+        UPDATE hospital.h_clinic_room_nurse_tb 
+        SET clinic_room_id = #{clinicRoomId}
+        WHERE nurse_id = #{nurseId}
+    </update>
+
+    <!--解绑护士与诊室-->
+    <delete id="unBindNurseAndClinicRoom">
+        DELETE FROM hospital.h_clinic_room_nurse_tb
+        <where>
+            <if test="ids != null">
+                nurse_id IN
                 <foreach collection="ids" item="id" open="(" close=")" separator=",">
                     #{id}
                 </foreach>

@@ -8,6 +8,7 @@ import com.hospital.hospitalserver.domain.dto.request.HospitalUpdateDoctorReqDto
 import com.hospital.hospitalserver.domain.dto.response.GetDoctorDetailByUsername;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorPageRespDto;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorFullPageRespDto;
+import com.hospital.hospitalserver.domain.dto.response.HospitalGetProfessionTitleRespDto;
 import com.hospital.hospitalserver.domain.entity.HospitalUser;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -55,4 +56,9 @@ public interface HospitalDoctorMapper {
      * 根据用户名查询医生详情
      */
     GetDoctorDetailByUsername getDoctorDetailByUsername(HospitalUser user);
+
+    /**
+     * 查询所有职称列表
+     */
+    List<HospitalGetProfessionTitleRespDto> getProfessionTitleList();
 }

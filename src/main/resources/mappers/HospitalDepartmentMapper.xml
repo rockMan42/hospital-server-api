@@ -61,7 +61,7 @@
                 AND d.status = #{status}
             </if>
         </where>
-        ORDER BY d.id  -- 建议加上 ORDER BY
+        ORDER BY d.id  DESC-- 建议加上 ORDER BY
         LIMIT #{start}, #{size}
     </select>
 

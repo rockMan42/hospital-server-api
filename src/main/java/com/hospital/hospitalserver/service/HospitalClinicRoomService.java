@@ -30,11 +30,11 @@ public class HospitalClinicRoomService {
     private HospitalClinicRoomMapping hospitalClinicRoomMapping;
     /**
      * 获取诊室列表(名称)
-     * @param requestDto
+     * @param
      * @return
      */
-    public List<HospitalGetClinicRoomPageRespDto> getClinicRoomSlimNameList(HospitalGetClinicRoomPageReqDto requestDto) {
-        return hospitalClinicRoomMapper.getClinicRoomSlimNameList(requestDto);
+    public List<HospitalGetClinicRoomPageRespDto> getClinicRoomSlimNameList() {
+        return hospitalClinicRoomMapper.getClinicRoomSlimNameList();
     }
 
     /**

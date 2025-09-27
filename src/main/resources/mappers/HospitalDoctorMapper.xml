@@ -233,4 +233,13 @@
         WHERE u.username = #{username}
             LIMIT 1
     </select>
+
+    <!--查询所有职称列表-->
+    <select id="getProfessionTitleList" resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetProfessionTitleRespDto">
+        SELECT 
+            id,
+            profashion_title AS profashionTitle
+        FROM hospital.h_profashion_title_tb
+        ORDER BY id ASC
+    </select>
 </mapper>

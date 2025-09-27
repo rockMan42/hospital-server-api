@@ -4,6 +4,184 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hospital.hospitalserver.mapper.HospitalNurseMapper">
 
+    <!--查询护士完整分页列表-->
+    <select id="getNurseFullPageList"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetNurseFullPageReqDto"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetNurseFullPageRespDto">
+        SELECT
+        hn.id,
+        hn.work_id AS workId,
+        hn.name,
+        hnpt.nurse_profashion_title AS profashionTitle,
+        hdpt.name AS departmentName,
+        hn.major_direct AS majorDirect,
+        hn.phone,
+        hn.enter_date AS enterDate,
+        hn.status
+        FROM hospital.h_nurse_tb hn
+        LEFT JOIN hospital.h_clinic_room_nurse_tb hcn ON hn.id = hcn.nurse_id
+        LEFT JOIN hospital.h_clinic_room_tb hc ON hcn.clinic_room_id = hc.id
+        LEFT JOIN hospital.h_department_tb hdpt ON hdpt.id = hc.department_id
+        LEFT JOIN hospital.h_nurse_profashion_title_tb hnpt ON hnpt.id = hn.npt_id
+        <where>
+            <if test="workId != null and workId != ''">
+                AND hn.work_id LIKE CONCAT('%', #{workId}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND hn.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="departmentName != null and departmentName != ''">
+                AND hdpt.name LIKE CONCAT('%', #{departmentName}, '%')
+            </if>
+            <if test="status != null">
+                AND hn.status = #{status}
+            </if>
+            <if test="nptId != null">
+                AND hn.npt_id = #{nptId}
+            </if>
+        </where>
+        ORDER BY hn.id DESC
+        LIMIT #{start}, #{size}
+    </select>
+
+    <!--查询护士完整分页列表总数-->
+    <select id="getNurseFullPageListCount"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetNurseFullPageReqDto"
+            resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM hospital.h_nurse_tb hn
+        LEFT JOIN hospital.h_clinic_room_nurse_tb hcn ON hn.id = hcn.nurse_id
+        LEFT JOIN hospital.h_clinic_room_tb hc ON hcn.clinic_room_id = hc.id
+        LEFT JOIN hospital.h_department_tb hdpt ON hdpt.id = hc.department_id
+        LEFT JOIN hospital.h_nurse_profashion_title_tb hnpt ON hnpt.id = hn.npt_id
+        <where>
+            <if test="workId != null and workId != ''">
+                AND hn.work_id LIKE CONCAT('%', #{workId}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND hn.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="departmentName != null and departmentName != ''">
+                AND hdpt.name LIKE CONCAT('%', #{departmentName}, '%')
+            </if>
+            <if test="status != null">
+                AND hn.status = #{status}
+            </if>
+            <if test="nptId != null">
+                AND hn.npt_id = #{nptId}
+            </if>
+        </where>
+    </select>
+
+    <!--添加护士-->
+    <insert id="createNurse" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalCreateNurseReqDto"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hospital.h_nurse_tb (name,
+                                         work_id,
+                                         gender,
+                                         age,
+                                         npt_id,
+                                         major_direct,
+                                         phone,
+                                         enter_date,
+                                         status,
+                                         description)
+        VALUES (#{name},
+                #{workId},
+                #{gender},
+                #{age},
+                #{nptId},
+                #{majorDirect},
+                #{phone},
+                #{enterDate},
+                #{status},
+                #{description})
+    </insert>
+
+    <!--修改护士信息-->
+    <update id="updateNurse" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalUpdateNurseReqDto">
+        UPDATE hospital.h_nurse_tb
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="workId != null and workId != ''">
+                work_id = #{workId},
+            </if>
+            <if test="gender != null and gender != ''">
+                gender = #{gender},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="nptId != null">
+                npt_id = #{nptId},
+            </if>
+            <if test="majorDirect != null and majorDirect != ''">
+                major_direct = #{majorDirect},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="enterDate != null">
+                enter_date = #{enterDate},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--批量删除护士-->
+    <delete id="deleteNurse" parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalDeleteNurseReqDto">
+        DELETE FROM hospital.h_nurse_tb
+        <where>
+            <if test="ids != null">
+                id IN
+                <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+    <!--查询护士详情byId-->
+    <select id="getNurseDetail"
+            parameterType="com.hospital.hospitalserver.domain.dto.request.HospitalGetNurseDetailReqDto"
+            resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetNurseFullPageRespDto">
+        SELECT hn.id,
+               hn.work_id           AS workId,
+               hn.name,
+               hnpt.nurse_profashion_title AS profashionTitle,
+               hdpt.name            AS departmentName,
+               hn.major_direct      AS majorDirect,
+               hn.phone,
+               hn.enter_date        AS enterDate,
+               hn.status,
+               hn.gender            AS gender,
+               hn.age               AS age,
+               hn.description       AS description
+        FROM hospital.h_nurse_tb hn
+                 LEFT JOIN hospital.h_nurse_profashion_title_tb hnpt ON hnpt.id = hn.npt_id
+                 LEFT JOIN hospital.h_clinic_room_nurse_tb hcn ON hn.id = hcn.nurse_id
+                 LEFT JOIN hospital.h_clinic_room_tb hc ON hcn.clinic_room_id = hc.id
+                 LEFT JOIN hospital.h_department_tb hdpt ON hdpt.id = hc.department_id
+        WHERE hn.id = #{id} LIMIT 1
+    </select>
+
+    <!--查询所有护士职称列表-->
+    <select id="getNurseProfessionTitleList" resultType="com.hospital.hospitalserver.domain.dto.response.HospitalGetNurseProfessionTitleRespDto">
+        SELECT 
+            id,
+            nurse_profashion_title AS profashionTitle
+        FROM hospital.h_nurse_profashion_title_tb
+        ORDER BY id ASC
+    </select>
+
     <select id="getNurseDetailByUsername" resultType="com.hospital.hospitalserver.domain.dto.response.GetNurseDetailByUsername">
         SELECT hnt.id,
                hnt.work_id           AS workId,

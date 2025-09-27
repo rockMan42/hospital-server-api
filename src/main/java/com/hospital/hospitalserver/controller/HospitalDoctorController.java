@@ -3,12 +3,14 @@ package com.hospital.hospitalserver.controller;
 import com.hospital.hospitalserver.domain.dto.request.*;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorPageRespDto;
 import com.hospital.hospitalserver.domain.dto.response.HospitalGetDoctorFullPageRespDto;
+import com.hospital.hospitalserver.domain.dto.response.HospitalGetProfessionTitleRespDto;
 import com.hospital.hospitalserver.service.HospitalDoctorService;
 import com.hospital.hospitalserver.util.PageUtils;
 import com.hospital.hospitalserver.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -75,8 +77,23 @@ public class HospitalDoctorController {
         return hospitalDoctorService.updateDoctor(reqDto);
     }
 
+    /**
+     * 删除医生
+     * @param reqDto
+     * @return
+     */
     @PostMapping("/hospital/doctor/deleteDoctor")
     public Response deleteDoctor(@RequestBody @Validated HospitalDeleteDoctorReqDto reqDto) {
         return hospitalDoctorService.deleteDoctorByIds(reqDto.getIds());
+    }
+
+    /**
+     * 查询所有职称列表
+     * @return
+     */
+    @GetMapping("/hospital/doctor/getProfessionTitleList")
+    public Response getProfessionTitleList() {
+        List<HospitalGetProfessionTitleRespDto> professionTitleList = hospitalDoctorService.getProfessionTitleList();
+        return Response.success(professionTitleList);
     }
 }

@@ -6,6 +6,7 @@ import com.hospital.hospitalserver.domain.dto.response.HospitalGetClinicRoomPage
 import com.hospital.hospitalserver.domain.entity.HospitalClinicRoom;
 import org.apache.ibatis.annotations.Mapper;
 import com.hospital.hospitalserver.domain.dto.request.HospitalCreateDoctorReqDto;
+import com.hospital.hospitalserver.domain.dto.request.HospitalCreateNurseReqDto;
 import java.util.List;
 
 @Mapper
@@ -14,7 +15,7 @@ public interface HospitalClinicRoomMapper {
     /**
      * 获取诊室列表（名称）
      */
-    List<HospitalGetClinicRoomPageRespDto> getClinicRoomSlimNameList(HospitalGetClinicRoomPageReqDto requestDto);
+    List<HospitalGetClinicRoomPageRespDto> getClinicRoomSlimNameList();
 
     /**
      * 获取诊室分页列表
@@ -75,4 +76,19 @@ public interface HospitalClinicRoomMapper {
      * 解绑医生与诊室
      */
     Integer unBindDoctorAndClinicRoom(List<Integer> ids);
+
+    /**
+     * 绑定护士与诊室
+     */
+    Integer bindNurseAndClinicRoom(HospitalCreateNurseReqDto requestDto);
+
+    /**
+     * 更新护士的诊室绑定关系
+     */
+    Integer updateNurseClinicRoomBinding(Integer nurseId, Integer clinicRoomId);
+
+    /**
+     * 解绑护士与诊室
+     */
+    Integer unBindNurseAndClinicRoom(List<Integer> ids);
 }
