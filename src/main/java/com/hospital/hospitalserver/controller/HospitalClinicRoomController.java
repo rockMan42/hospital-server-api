@@ -33,6 +33,17 @@ public class HospitalClinicRoomController {
     }
 
     /**
+     * 根据科室ID获取诊室列表（二级联动）
+     * @param reqDto
+     * @return
+     */
+    @PostMapping("/hospital/clinicroom/getClinicRoomListByDepartmentId")
+    public Response getClinicRoomListByDepartmentId(@RequestBody @Validated HospitalGetClinicRoomByDepartmentReqDto reqDto) {
+        List<HospitalGetClinicRoomPageRespDto> clinicRoomList = hospitalClinicRoomService.getClinicRoomListByDepartmentId(reqDto);
+        return Response.success(clinicRoomList);
+    }
+
+    /**
      * 新增诊室
      * @param reqDto
      * @return

@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @CrossOrigin
-public class FeeController {
+public class HospitalFeeController {
 
     @Autowired
     private HospitalFeeCategoryService hospitalFeeCategoryService;

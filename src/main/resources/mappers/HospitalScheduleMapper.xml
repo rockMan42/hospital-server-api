@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.hospitalserver.mapper.HospitalScheduleMapper">
+
+    <!--获取人员类型（部分）列表-->
+    <select id="getStaffTypeSlimList" resultType="com.hospital.hospitalserver.domain.entity.HospitalStaffType">
+        SELECT *
+        FROM hospital.h_staff_type_tb
+    </select>
+
+    <select id="getTimeSlotSlimList" resultType="com.hospital.hospitalserver.domain.entity.HospitalTimeSlot">
+        SELECT *
+        FROM hospital.h_time_slot_tb
+    </select>
+</mapper>

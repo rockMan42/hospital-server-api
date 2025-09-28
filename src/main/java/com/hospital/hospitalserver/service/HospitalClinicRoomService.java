@@ -38,6 +38,20 @@ public class HospitalClinicRoomService {
     }
 
     /**
+     * 根据科室ID获取诊室列表
+     * @param reqDto
+     * @return
+     */
+    public List<HospitalGetClinicRoomPageRespDto> getClinicRoomListByDepartmentId(HospitalGetClinicRoomByDepartmentReqDto reqDto) {
+        try {
+            return hospitalClinicRoomMapper.getClinicRoomListByDepartmentId(reqDto);
+        } catch (Exception e) {
+            log.error("根据科室ID查询诊室列表时出错: {}", e.getMessage());
+            throw new CustomException(ResultCodeEnum.ERROR, "查询诊室列表失败");
+        }
+    }
+
+    /**
      * 获取诊室分页列表
      * @param reqDto
      * @return

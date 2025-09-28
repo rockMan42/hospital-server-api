@@ -18,6 +18,11 @@ public interface HospitalClinicRoomMapper {
     List<HospitalGetClinicRoomPageRespDto> getClinicRoomSlimNameList();
 
     /**
+     * 根据科室ID获取诊室列表
+     */
+    List<HospitalGetClinicRoomPageRespDto> getClinicRoomListByDepartmentId(HospitalGetClinicRoomByDepartmentReqDto reqDto);
+
+    /**
      * 获取诊室分页列表
      */
     List<HospitalGetClinicRoomDetailRespDto> getClinicRoomPageList(HospitalGetClinicRoomPageReqDto reqDto);
